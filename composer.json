@@ -1,7 +1,6 @@
 {
     "name": "pashavdw/mvcproject",
     "description": "mvc",
-    "license": "MIT",
     "autoload": {
         "files": [
             "src/Helpers/global.php"
@@ -16,14 +15,12 @@
             "email": "pasha.pasha12e@gmail.com"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
         "php": "^8.2",
-        "ext-openssl": "",
-        "ext-json": "",
+        "ext-openssl": "*",
+        "ext-json": "*",
         "vlucas/phpdotenv": "^5.4.1",
         "symfony/finder": "^6.1"
-    },
-    "repositories": {
-        "packagist.org": true
     }
 }
