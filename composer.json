@@ -1,6 +1,7 @@
 {
     "name": "pashavdw/mvcproject",
     "description": "mvc",
+    "license": "MIT",
     "autoload": {
         "files": [
             "src/Helpers/global.php"
@@ -15,7 +16,6 @@
             "email": "pasha.pasha12e@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
     "require": {
         "php": "^8.2",
         "ext-openssl": "",
