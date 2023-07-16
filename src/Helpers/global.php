@@ -2,6 +2,12 @@
 
 use Pasha\Mvcproject\Core\App;
 
+if(! function_exists("app")) {
+    function app(string $key) {
+        return new App();
+    }
+}
+
 if(! function_exists("config")) {
     function config(string $key) {
         //
