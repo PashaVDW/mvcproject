@@ -3,7 +3,7 @@
 use Pasha\Mvcproject\Core\App;
 
 if(! function_exists("app")) {
-    function app(string $key) {
+    function app() {
         return new App();
     }
 }
