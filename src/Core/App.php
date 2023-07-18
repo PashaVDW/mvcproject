@@ -3,7 +3,6 @@
 namespace Pasha\Mvcproject\Core;
 
 class App {
-
     private static string $basePath;
 
     public function __construct() {
