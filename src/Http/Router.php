@@ -1,46 +1,91 @@
 <?php
 
-// The Router.php file contains the actual router class responsible for processing incoming requests and directing them to the appropriate controller and action.
-// This class typically handles the URL parsing, route matching, and invoking the corresponding controller and action based on the matched route.
-// The Router.php class would have methods to define routes, such as get(), post(), put(), delete(), etc.
-// These methods allow you to specify the URL pattern, the corresponding controller and action, and potentially other middleware or parameters.
+// The Request class is responsible for encapsulating the incoming HTTP request made by the client (e.g., a web browser)
+// and providing a convenient interface to access its various components.
+// It parses the request headers, URL parameters, form data, cookies, and any other relevant information from the request.
+// This class is designed to abstract away the details of the HTTP protocol, making it easier to work with request data in the application.
+// The Request class may offer methods like getMethod() to retrieve the HTTP method used (e.g., GET, POST), getPath() to obtain the requested URL path,
+// getQueryParams() to fetch query parameters, and so on. These methods allow the controller to access and use the request data to determine the appropriate actions to take.
 
 namespace Pasha\Mvcproject\Http;
 
-use Pasha\Mvcproject\Http\Enums\RequestMethods;
+use App\Http\Controllers\HomeController;
+use http\Exception\RuntimeException;
+use Pasha\Mvcproject\Core\App;
+use ReflectionMethod;
 
-class Router {
+class Request
+{
+    protected $request;
+
+    public function __construct() {
+        $this->request = $_REQUEST;
+    }
+
+    public function all(): array
+    {
+        return $this->request;
+    }
+
     /**
-     * @var mixed|array
+     * @throws \ReflectionException
      */
-    protected static array $routes = [];
+    public function resolveRouting()
+    {
+        require_once routes_path();
 
-    public function __construct($routes = []) {
-        return static::$routes = $routes;
-    }
+        $routes = Router::getRoutes();
+        $uri = $this->getUri();
 
-    // Route::get('/home', Homecontroller::class, 'index');
+        if(isset($routes[$uri]))
+        {
+            $route = $routes[$uri];
 
-    public static function get(string $uri, string $controller, string $action) {
-        static::$routes[] = [
-          'uri' => $uri,
-          'controller' => $controller,
-          'action' => $action,
-          'method' => RequestMethods::GET
-        ];
-    }
-
-    public function route(string $uri, string $method) {
-        foreach (static::$routes as $route) {
-            if ($route['uri'] === $uri) {
-                // Dit gaat niet werken kijk naar: https://www.php.net/manual/en/class.reflectionmethod.php
-                return root_path($route['controller']);
+            if(! class_exists($route['controller'])) {
+                throw new RuntimeException(sprintf('Controller [%s] for route [%s] does not exits', $route['controller'], $route['uri']));
             }
+
+            $obj = new $route['controller'];
+            $method = new ReflectionMethod($obj, $route['action']);
+            if($method->getNumberOfParameters() < 1)
+            {
+                return $obj->{$route['action']}();
+            }
+
+            $parameters = [];
+            foreach($method->getParameters() as $parameter)
+            {
+                if($parameter->getName() === 'request')
+                {
+                    $parameters[] = app()->getRequest();
+                }
+            }
+
+            return call_user_func_array([$obj, $route['action']], $parameters);
+        } else {
+            abort(404);
         }
-        abort(404);
     }
 
-    public static function getRoutes() {
-        return static::$routes;
+    // Probeer niet de functie niet get te noemen maar meer iets algemeens
+    // Vang daarna alle routes op (Router::getRoutes()) en filter de routes door de $_SERVER['REQUEST_METHOD'] en uiteraard door de url
+    // Probeer daarna de functie te zoeken in de class die allemaal in de route zouden moeten zitten etc etc
+    public function get(string $uri, string $default = null)
+    {
+        if(array_key_exists($uri, Router::getRoutes())) {
+            return Router::getRoutes()[$uri];
+        } else {
+            return $default;
+        }
+    }
+
+    private function getUri()
+    {
+        if ($_SERVER['REQUEST_URI'])
+        {
+            $url = rtrim(strtolower($_SERVER['REQUEST_URI']), '/');
+            // Filter de url van alles wat niet in een url thuishoort
+            return filter_var($url, FILTER_SANITIZE_URL);
+        }
     }
 }
