@@ -7,6 +7,8 @@
 
 namespace Pasha\Mvcproject\Http;
 
+use Pasha\Mvcproject\Http\Enums\RequestMethods;
+
 class Router {
     /**
      * @var mixed|array
@@ -17,11 +19,14 @@ class Router {
         return static::$routes = $routes;
     }
 
-    public function get(string $uri, string $controller) {
+    // Route::get('/home', Homecontroller::class, 'index');
+
+    public static function get(string $uri, string $controller, string $action) {
         static::$routes[] = [
           'uri' => $uri,
           'controller' => $controller,
-          'method' => $method
+          'action' => $action,
+          'method' => RequestMethods::GET
         ];
     }
 
@@ -35,7 +40,7 @@ class Router {
         abort(404);
     }
 
-    public function getRoutes() {
+    public static function getRoutes() {
         return static::$routes;
     }
 }

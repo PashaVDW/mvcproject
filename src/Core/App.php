@@ -2,11 +2,26 @@
 
 namespace Pasha\Mvcproject\Core;
 
+use Pasha\Mvcproject\Http\Request;
+
 class App {
     private static string $basePath;
+    private Request $request;
 
     public function __construct() {
         static::init();
+    }
+
+    public function build(): void
+    {
+        $this->request = new Request();
+
+        $this->request->resolveRouting();
+    }
+
+    public function getRequest(): Request
+    {
+        return $this->request;
     }
 
     private static function init() {
@@ -22,7 +37,7 @@ class App {
     }
 
     public static function getRoutesPath(): string {
-        return static::$basePath . DIRECTORY_SEPARATOR . 'routes';
+        return static::$basePath . DIRECTORY_SEPARATOR . 'routes.php';
 
     }
 

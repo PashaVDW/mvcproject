@@ -14,6 +14,23 @@ if(! function_exists("config")) {
     }
 }
 
+if(! function_exists('dd'))
+{
+    function dd(...$args)
+    {
+        var_dump(...$args);
+        die();
+    }
+}
+
+if(! function_exists('dump'))
+{
+    function dump(...$args)
+    {
+        var_dump(...$args);
+    }
+}
+
 if (!function_exists('root_path'))
 {
     /**

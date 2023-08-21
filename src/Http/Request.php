@@ -7,7 +7,9 @@
 // The Request class may offer methods like getMethod() to retrieve the HTTP method used (e.g., GET, POST), getPath() to obtain the requested URL path,
 // getQueryParams() to fetch query parameters, and so on. These methods allow the controller to access and use the request data to determine the appropriate actions to take.
 
-namespace Pasha\Mvcproject\Core;
+namespace Pasha\Mvcproject\Http;
+
+use Pasha\Mvcproject\Core\App;
 
 class Request
 {
@@ -20,6 +22,13 @@ class Request
     public function all(): array
     {
         return $this->request;
+    }
+
+    public function resolveRouting()
+    {
+        require_once routes_path();
+
+        dd(Router::getRoutes());
     }
 
     // Probeer niet de functie niet get te noemen maar meer iets algemeens
