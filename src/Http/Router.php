@@ -17,17 +17,18 @@ class Router {
         return static::$routes = $routes;
     }
 
-    public function get($uri, $controller) {
+    public function get(string $uri, string $controller) {
         static::$routes[] = [
           'uri' => $uri,
           'controller' => $controller,
-          'method' => 'GET'
+          'method' => $method
         ];
     }
 
-    public function route($uri, $method) {
+    public function route(string $uri, string $method) {
         foreach (static::$routes as $route) {
             if ($route['uri'] === $uri) {
+                // Dit gaat niet werken kijk naar: https://www.php.net/manual/en/class.reflectionmethod.php
                 return root_path($route['controller']);
             }
         }
