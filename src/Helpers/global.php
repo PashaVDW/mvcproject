@@ -79,16 +79,15 @@ if (!function_exists('routes_path'))
     }
 }
 
-//if (!function_exists('env'))
-//{
-//    /**
-//     * Get a env value
-//     *
-//     * @param string item
-//     * @return string env
-//     */
-//    function env(string $item)
-//    {
-//        return \Visionv2\Config\Handler::getEnv($item);
-//    }
-//}
+if (!function_exists('abort'))
+{
+    /**
+     * @param int $code
+     *
+     */
+    function abort(int $code = 404)
+    {
+        http_response_code($code);
+        die();
+    }
+}

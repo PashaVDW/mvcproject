@@ -14,8 +14,20 @@ class Request
     protected $request;
 
     public function __construct() {
-
+        $this->request = $_REQUEST;
     }
 
+    public function all(): array
+    {
+        return $this->request;
+    }
 
+    public function get($key, $default = null)
+    {
+        if(array_key_exists($key, $this->request)) {
+            return $this->request[$key];
+        } else {
+            return $default;
+        }
+    }
 }
