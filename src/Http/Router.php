@@ -11,14 +11,14 @@ class Router {
     /**
      * @var mixed|array
      */
-    protected mixed $routes = [];
+    protected static array $routes = [];
 
     public function __construct($routes = []) {
-        return $this->routes = $routes;
+        return static::$routes = $routes;
     }
 
     public function get($uri, $controller) {
-        $this->routes[] = [
+        static::$routes[] = [
           'uri' => $uri,
           'controller' => $controller,
           'method' => 'GET'
@@ -26,15 +26,15 @@ class Router {
     }
 
     public function route($uri, $method) {
-        foreach ($this->routes as $route) {
+        foreach (static::$routes as $route) {
             if ($route['uri'] === $uri) {
                 return root_path($route['controller']);
             }
         }
-        abort();
+        abort(404);
     }
 
     public function getRoutes() {
-        return $this->routes;
+        return static::$routes;
     }
 }
