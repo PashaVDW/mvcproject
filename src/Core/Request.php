@@ -22,6 +22,9 @@ class Request
         return $this->request;
     }
 
+    // Probeer niet de functie niet get te noemen maar meer iets algemeens
+    // Vang daarna alle routes op (Router::getRoutes()) en filter de routes door de $_SERVER['REQUEST_METHOD'] en uiteraard door de url
+    // Probeer daarna de functie te zoeken in de class die allemaal in de route zouden moeten zitten etc etc
     public function get($key, $default = null)
     {
         if(array_key_exists($key, $this->request)) {
