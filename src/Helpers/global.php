@@ -2,19 +2,23 @@
 
 use Pasha\Mvcproject\Core\App;
 
-if(! function_exists("app")) {
-    function app() {
+if (!function_exists("app"))
+{
+    function app()
+    {
         return new App();
     }
 }
 
-if(! function_exists("config")) {
-    function config(string $key) {
+if (!function_exists("config"))
+{
+    function config(string $key)
+    {
         //
     }
 }
 
-if(! function_exists('dd'))
+if (!function_exists('dd'))
 {
     function dd(...$args)
     {
@@ -23,7 +27,7 @@ if(! function_exists('dd'))
     }
 }
 
-if(! function_exists('dump'))
+if (!function_exists('dump'))
 {
     function dump(...$args)
     {
@@ -51,7 +55,7 @@ if (!function_exists('view_path'))
      *
      * @return string path
      */
-    function view_path()
+    function view_path(): string
     {
         return App::getViewPath();
     }
@@ -59,14 +63,13 @@ if (!function_exists('view_path'))
 
 if (!function_exists('view'))
 {
-    /**
-     * require the view component
-     *
-     * @return \Visionv2\Core\App
-     */
-    function view($view, $attributes = [])
+    function view($file)
     {
-        return App::makeView($view, $attributes);
+        if (! file_exists(view_path() . "/" . $file))
+        {
+            throw new \RuntimeException(sprintf('View [%s] does not exist in [%s]', $file, view_path()));
+        }
+        return include_once(view_path() . "/" . $file);
     }
 }
 
