@@ -32,6 +32,7 @@ class Request
      */
     public function resolveRouting()
     {
+
         require_once routes_path();
 
         $routes = Router::getRoutes();
@@ -40,16 +41,15 @@ class Request
         if(isset($routes[$uri]))
         {
             $route = $routes[$uri];
-
             if(! class_exists($route['controller'])) {
                 throw new RuntimeException(sprintf('Controller [%s] for route [%s] does not exits', $route['controller'], $route['uri']));
             }
 
             $obj = new $route['controller'];
-            $method = new ReflectionMethod($obj, $route['action']);
+            $method = new ReflectionMethod($obj, $route['method']);
             if($method->getNumberOfParameters() < 1)
             {
-                return $obj->{$route['action']}();
+                return $obj->{$route['method']}();
             }
 
             $parameters = [];
@@ -61,21 +61,9 @@ class Request
                 }
             }
 
-            return call_user_func_array([$obj, $route['action']], $parameters);
+            return call_user_func_array([$obj, $route['method']], $parameters);
         } else {
             abort(404);
-        }
-    }
-
-    // Probeer niet de functie niet get te noemen maar meer iets algemeens
-    // Vang daarna alle routes op (Router::getRoutes()) en filter de routes door de $_SERVER['REQUEST_METHOD'] en uiteraard door de url
-    // Probeer daarna de functie te zoeken in de class die allemaal in de route zouden moeten zitten etc etc
-    public function get(string $uri, string $default = null)
-    {
-        if(array_key_exists($uri, Router::getRoutes())) {
-            return Router::getRoutes()[$uri];
-        } else {
-            return $default;
         }
     }
 

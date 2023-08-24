@@ -21,6 +21,7 @@
         "ext-openssl": "*",
         "ext-json": "*",
         "vlucas/phpdotenv": "^5.4.1",
-        "symfony/finder": "^6.1"
+        "symfony/finder": "^6.1",
+      "ext-http": "*"
     }
 }
